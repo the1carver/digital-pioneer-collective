@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useRef, useEffect } from "react"
-import { useChat } from "ai/react"
+import { useChat } from "@ai-sdk/react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -211,7 +211,7 @@ export function AIChat({ className }: AIChatProps) {
           <Button
             type="submit"
             size="icon"
-            disabled={isLoading || !input.trim()}
+            disabled={isLoading || !(input ?? '').trim()}
             className="bg-gradient-to-r from-cyan-500 to-lime-400 hover:from-cyan-400 hover:to-lime-300"
           >
             <Send className="w-4 h-4 text-black" />
