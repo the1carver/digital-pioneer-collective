@@ -2,10 +2,7 @@ import { anthropic } from '@ai-sdk/anthropic'
 import { streamText, convertToCoreMessages } from 'ai'
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+export const runtime = 'nodejs'
 
 export async function POST(req: Request) {
   try {
@@ -17,9 +14,28 @@ export async function POST(req: Request) {
 
     const token = authHeader.substring(7)
 
+    // Ensure required environment variables are present
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+    if (!supabaseUrl || !supabaseServiceRoleKey) {
+      return new Response(
+        JSON.stringify({
+          error:
+            'Supabase is not configured. Please set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.',
+          requiresSetup: true,
+        }),
+        {
+          status: 503,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
+    }
+
     // Verify the user with Supabase
+    const supabase = createClient(supabaseUrl, supabaseServiceRoleKey)
     const { data: { user }, error: authError } = await supabase.auth.getUser(token)
-    
+
     if (authError || !user) {
       return new Response('Unauthorized', { status: 401 })
     }

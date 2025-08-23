@@ -1,5 +1,7 @@
 "use client"
 
+export const dynamic = 'force-dynamic'
+
 import React from "react"
 import { AIChat } from "@/components/ai-chat"
 import { AnimatedLogo } from "@/components/animated-logo"
