@@ -31,13 +31,17 @@ export default function HomePage() {
             together. We use AI and Web3 to share ownership, profits, and success.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <MagneticButton size="lg" className="text-lg px-8 py-6 liquid-fill glow-pulse">
-              Join the Collective
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </MagneticButton>
-            <MagneticButton variant="outline" size="lg" className="text-lg px-8 py-6 bg-transparent border-draw">
-              Read the Whitepaper
-            </MagneticButton>
+            <a href="/join" className="inline-block">
+              <MagneticButton size="lg" className="text-lg px-8 py-6 liquid-fill glow-pulse">
+                Join the Collective
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </MagneticButton>
+            </a>
+            <a href="/login" className="inline-block">
+              <MagneticButton variant="outline" size="lg" className="text-lg px-8 py-6 bg-transparent border-draw">
+                Sign In
+              </MagneticButton>
+            </a>
           </div>
         </div>
       </section>
