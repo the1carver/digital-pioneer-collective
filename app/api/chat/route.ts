@@ -82,10 +82,9 @@ Keep responses helpful, engaging, and aligned with Web3 and decentralized market
       model: anthropic('claude-3-5-sonnet-20241022'),
       messages: [systemMessage, ...convertToCoreMessages(messages)],
       temperature: 0.7,
-      maxTokens: 1000,
     })
 
-    return result.toDataStreamResponse()
+    return result.toTextStreamResponse()
   } catch (error) {
     console.error('Chat API Error:', error)
     return new Response(JSON.stringify({

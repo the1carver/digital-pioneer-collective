@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
+import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -41,6 +42,7 @@ export function SignupForm({ onSuccess, onError }: SignupFormProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
 
   const {
     register,
@@ -76,6 +78,15 @@ export function SignupForm({ onSuccess, onError }: SignupFormProps) {
         return
       }
 
+      // If a session exists after sign-up, redirect to dashboard
+      const { user: currentUser } = await authService.getCurrentUser()
+      if (currentUser) {
+        onSuccess?.(user)
+        router.push('/dashboard')
+        return
+      }
+
+      // Otherwise show confirmation message
       setSuccess(true)
       reset()
       onSuccess?.(user)

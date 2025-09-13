@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { User, AuthError } from '@supabase/supabase-js'
 import { authService } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
+import { useAccount } from 'wagmi'
 
 interface UseAuthReturn {
   user: User | null
@@ -18,6 +19,7 @@ export function useAuth(): UseAuthReturn {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
+  const { address } = useAccount()
 
   useEffect(() => {
     let mounted = true
