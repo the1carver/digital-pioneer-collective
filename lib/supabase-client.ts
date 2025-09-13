@@ -6,9 +6,10 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 let supabaseInstance: SupabaseClient | null = null
 
 // Only create supabase client on client side
-export function getSupabaseClient(): SupabaseClient {
+export function getSupabaseClient(): SupabaseClient | null {
   if (typeof window === 'undefined') {
-    throw new Error('Supabase client is only available on the client side')
+    // Server-side: return null to avoid SSR errors
+    return null
   }
 
   if (!supabaseInstance) {
@@ -31,4 +32,7 @@ export function getSupabaseClient(): SupabaseClient {
   return supabaseInstance
 }
 
-export const supabase: SupabaseClient = getSupabaseClient()
+// Export a client on the client, a harmless placeholder on the server
+export const supabase = (typeof window !== 'undefined'
+  ? getSupabaseClient()
+  : null) as unknown as SupabaseClient
