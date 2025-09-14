@@ -51,7 +51,7 @@ pnpm dev
 | NEXT_PUBLIC_SNAPSHOT_SPACE | your Snapshot space (e.g., demo.eth) |
 | NEXT_PUBLIC_SAFE_ADDRESS | Safe address |
 | NEXT_PUBLIC_SAFE_CHAIN | polygon | base | mainnet |
-| WEB3_STORAGE_TOKEN | Web3.Storage API token |
+| PINATA_JWT | Pinata JWT (pinJSONToIPFS) |
 | ANTHROPIC_API_KEY | Anthropic API key |
 
 3. Build & deploy

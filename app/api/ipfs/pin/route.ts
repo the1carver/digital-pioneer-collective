@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
 
-// Minimal IPFS pin using web3.storage-compatible API
+// IPFS pin using Pinata (pinJSONToIPFS with JWT)
 export async function POST(request: Request) {
   try {
-    const token = process.env.WEB3_STORAGE_TOKEN
-    if (!token) {
-      return NextResponse.json({ error: 'WEB3_STORAGE_TOKEN missing' }, { status: 400 })
+    const pinataJwt = process.env.PINATA_JWT
+    if (!pinataJwt) {
+      return NextResponse.json({ error: 'PINATA_JWT missing (set in env)' }, { status: 503 })
     }
 
     const body = await request.json()
@@ -14,21 +14,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing content' }, { status: 400 })
     }
 
-    const file = new File([content], (name || 'document.txt'), { type: 'text/plain' })
-    const form = new FormData()
-    form.append('file', file)
+    const payload = {
+      pinataOptions: { cidVersion: 1 },
+      pinataMetadata: { name: name || 'proposal.txt' },
+      pinataContent: { content }
+    }
 
-    const res = await fetch('https://api.web3.storage/upload', {
+    const res = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
       method: 'POST',
-      headers: { Authorization: `Bearer ${token}` },
-      body: form as any
+      headers: {
+        'Authorization': `Bearer ${pinataJwt}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
     })
 
     if (!res.ok) {
-      return NextResponse.json({ error: 'Pin failed' }, { status: 500 })
+      const text = await res.text().catch(() => '')
+      return NextResponse.json({ error: 'Pin failed', details: text }, { status: 500 })
     }
     const json = await res.json()
-    const cid = json?.cid
+    const cid = json?.IpfsHash
     return NextResponse.json({ cid })
   } catch (e) {
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
