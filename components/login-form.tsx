@@ -43,21 +43,33 @@ export function LoginForm({ onSuccess, onError }: LoginFormProps) {
       setIsLoading(true)
       setError(null)
       
+      console.log('Login attempt:', data.email)
+      
       const signInData: SignInData = {
         email: data.email,
         password: data.password
       }
 
       const { user, error } = await authService.signIn(signInData)
+      
+      console.log('Login result:', { user: !!user, error: error?.message })
 
       if (error) {
+        console.error('Login error:', error)
         setError(error.message)
         onError?.(error.message)
         return
       }
 
-      onSuccess?.(user)
+      if (user) {
+        console.log('Login successful, calling onSuccess')
+        onSuccess?.(user)
+      } else {
+        console.warn('No user returned from signIn')
+        setError('Login failed - no user returned')
+      }
     } catch (err) {
+      console.error('Login exception:', err)
       const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred'
       setError(errorMessage)
       onError?.(errorMessage)

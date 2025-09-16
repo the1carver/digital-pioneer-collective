@@ -12,6 +12,7 @@ export default function LoginPage() {
   const router = useRouter()
 
   const handleLoginSuccess = (user: any) => {
+    console.log('handleLoginSuccess called with user:', !!user)
     router.push('/dashboard')
   }
 
