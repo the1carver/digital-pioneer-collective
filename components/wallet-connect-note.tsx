@@ -13,9 +13,16 @@ export function WalletConnectNote() {
         return
       }
       // Store wallet address in user metadata (best-effort)
-      await supabase.auth.updateUser({
-        data: { wallet_address: address }
-      })
+      try {
+        const { error } = await supabase.auth.updateUser({
+          data: { wallet_address: address }
+        })
+        if (error) {
+          console.error('Failed to update user wallet address:', error)
+        }
+      } catch (err) {
+        console.error('Unexpected error updating user wallet address:', err)
+      }
     }
     run()
   }, [isConnected, address])
