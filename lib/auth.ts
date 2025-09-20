@@ -1,4 +1,4 @@
-import { supabase } from './supabase-client'
+import { getSupabaseClient } from './supabase-client'
 import type { User, AuthError } from '@supabase/supabase-js'
 
 export interface AuthState {
@@ -26,6 +26,11 @@ export interface SignInData {
 export const authService = {
   async signUp({ email, password, name, walletAddress, role, experience, interests, portfolio, motivation }: SignUpData) {
     try {
+      const supabase = getSupabaseClient()
+      if (!supabase) {
+        throw new Error('Supabase client not available')
+      }
+      
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -42,7 +47,9 @@ export const authService = {
         }
       })
 
-      if (error) throw error
+      if (error) {
+        throw error
+      }
 
       return { user: data.user, error: null }
     } catch (error) {
@@ -52,12 +59,19 @@ export const authService = {
 
   async signIn({ email, password }: SignInData) {
     try {
+      const supabase = getSupabaseClient()
+      if (!supabase) {
+        throw new Error('Supabase client not available')
+      }
+      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
       })
 
-      if (error) throw error
+      if (error) {
+        throw error
+      }
 
       return { user: data.user, error: null }
     } catch (error) {
@@ -67,8 +81,15 @@ export const authService = {
 
   async signOut() {
     try {
+      const supabase = getSupabaseClient()
+      if (!supabase) {
+        throw new Error('Supabase client not available')
+      }
+      
       const { error } = await supabase.auth.signOut()
-      if (error) throw error
+      if (error) {
+        throw error
+      }
       return { error: null }
     } catch (error) {
       return { error: error as AuthError }
@@ -77,8 +98,15 @@ export const authService = {
 
   async getCurrentUser() {
     try {
+      const supabase = getSupabaseClient()
+      if (!supabase) {
+        return { user: null, error: null }
+      }
+      
       const { data: { user }, error } = await supabase.auth.getUser()
-      if (error) throw error
+      if (error) {
+        throw error
+      }
       return { user, error: null }
     } catch (error) {
       return { user: null, error: error as AuthError }
@@ -86,6 +114,12 @@ export const authService = {
   },
 
   onAuthStateChange(callback: (user: User | null) => void) {
+    const supabase = getSupabaseClient()
+    if (!supabase) {
+      // Return a no-op subscription
+      return { data: { subscription: { unsubscribe: () => {} } } }
+    }
+    
     return supabase.auth.onAuthStateChange((_event, session) => {
       callback(session?.user ?? null)
     })

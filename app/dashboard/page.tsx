@@ -8,6 +8,7 @@ import { Users, Zap, Shield, LogOut, Settings, Loader2, Bot } from "lucide-react
 import { MagneticButton } from "@/components/magnetic-button"
 import { useAuth } from "@/hooks/use-auth"
 import Link from "next/link"
+import { SafeWidget } from "@/components/safe-widget"
 
 export default function DashboardPage() {
   const { user, loading, signOut } = useAuth()
@@ -168,6 +169,29 @@ export default function DashboardPage() {
                   <Shield className="w-4 h-4 mr-2" />
                   View Rewards
                 </MagneticButton>
+              </CardContent>
+            </Card>
+
+            <div className="lg:col-span-2">
+              <SafeWidget safeAddress={process.env.NEXT_PUBLIC_SAFE_ADDRESS || ''} chain={(process.env.NEXT_PUBLIC_SAFE_CHAIN as any) || 'polygon'} />
+            </div>
+
+            {/* Lindy Embed */}
+            <Card className="bg-card/50 border-border/50 backdrop-blur-sm lg:col-span-2">
+              <CardHeader>
+                <CardTitle>AI Assistant (Lindy)</CardTitle>
+                <CardDescription>Embedded assistant for quick interactions</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="w-full h-[700px]">
+                  <iframe
+                    src="https://chat.lindy.ai/embedded/lindyEmbed/964c2a7b-ad70-4974-ba1b-1318754175fb"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 'none' }}
+                    title="Lindy Embed"
+                  />
+                </div>
               </CardContent>
             </Card>
           </div>

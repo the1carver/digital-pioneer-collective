@@ -12,6 +12,8 @@ interface MagneticButtonProps {
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
   size?: "default" | "sm" | "lg" | "icon"
   onClick?: () => void
+  type?: "button" | "submit" | "reset"
+  disabled?: boolean
 }
 
 export function MagneticButton({
@@ -20,6 +22,8 @@ export function MagneticButton({
   variant = "default",
   size = "default",
   onClick,
+  type = "button",
+  disabled,
 }: MagneticButtonProps) {
   const buttonRef = useRef<HTMLButtonElement>(null)
 
@@ -52,6 +56,8 @@ export function MagneticButton({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onClick={onClick}
+      type={type}
+      disabled={disabled}
     >
       {children}
     </Button>

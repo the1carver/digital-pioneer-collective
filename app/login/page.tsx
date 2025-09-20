@@ -12,12 +12,23 @@ export default function LoginPage() {
   const router = useRouter()
 
   const handleLoginSuccess = (user: any) => {
-    router.push('/dashboard') // Redirect to dashboard after successful login
+    console.log('handleLoginSuccess called with user:', !!user)
+    router.push('/dashboard')
   }
 
   const handleLoginError = (error: string) => {
     console.error('Login error:', error)
   }
+
+  // Debug environment
+  React.useEffect(() => {
+    console.log('Environment check:', {
+      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
+      hasAnonKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      hasPublishableKey: !!process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY,
+      nodeEnv: process.env.NODE_ENV
+    })
+  }, [])
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">

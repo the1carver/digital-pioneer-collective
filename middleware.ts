@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Protected routes that require authentication
-  const protectedRoutes = ['/dashboard', '/profile', '/settings', '/chat']
+  const protectedRoutes = ['/profile', '/settings']
   
   // Auth routes that should redirect authenticated users
   const authRoutes = ['/login', '/join']
@@ -63,15 +63,6 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico|public).*)',
-  ],
+  // Temporarily disable middleware routing rules to avoid auth redirects
+  matcher: [],
 }

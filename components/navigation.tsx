@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { MagneticButton } from "@/components/magnetic-button"
 import { AnimatedLogo } from "@/components/animated-logo"
 import { ArrowRight, LogIn, User } from "lucide-react"
+import { ConnectButton } from "@rainbow-me/rainbowkit"
 import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
 
@@ -27,12 +28,35 @@ export function Navigation({ className }: NavigationProps) {
           {loading ? (
             <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
           ) : user ? (
-            <Link href="/dashboard">
-              <Button variant="ghost" className="gap-2">
-                <User className="h-4 w-4" />
-                Dashboard
-              </Button>
-            </Link>
+            <>
+              <Link href="/proposals">
+                <Button variant="ghost" className="gap-2">
+                  Proposals
+                </Button>
+              </Link>
+              <Link href="/transparency">
+                <Button variant="ghost" className="gap-2">
+                  Transparency
+                </Button>
+              </Link>
+              <Link href="/learn">
+                <Button variant="ghost" className="gap-2">
+                  Learn
+                </Button>
+              </Link>
+              <Link href="/moderation">
+                <Button variant="ghost" className="gap-2">
+                  Moderation
+                </Button>
+              </Link>
+              <ConnectButton />
+              <Link href="/dashboard">
+                <Button variant="ghost" className="gap-2">
+                  <User className="h-4 w-4" />
+                  Dashboard
+                </Button>
+              </Link>
+            </>
           ) : (
             <>
               <Link href="/login">

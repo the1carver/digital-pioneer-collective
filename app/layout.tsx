@@ -3,6 +3,9 @@ import type { Metadata } from "next"
 import { Poppins, Inter } from "next/font/google"
 import "./globals.css"
 import { AuthProvider } from "@/components/auth-provider"
+import { WalletProvider } from "@/components/wallet-provider"
+import { WalletConnectNote } from "@/components/wallet-connect-note"
+import { EnvBanner } from "@/components/env-banner"
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -33,7 +36,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${poppins.variable} ${inter.variable} dark`}>
       <body className="antialiased">
-        <AuthProvider>{children}</AuthProvider>
+        <EnvBanner />
+        <WalletProvider>
+          <AuthProvider>
+            <WalletConnectNote />
+            {children}
+          </AuthProvider>
+        </WalletProvider>
       </body>
     </html>
   )
