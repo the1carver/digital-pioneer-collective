@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import { supabase } from "@/lib/supabase-client"
+import { createClient } from "@/lib/supabase/client"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
@@ -20,6 +20,7 @@ export default function ModerationPage() {
   const [items, setItems] = useState<AILog[]>([])
 
   const load = async () => {
+    const supabase = createClient()
     const { data } = await supabase
       .from('ai_logs')
       .select('id, proposal_id, prompt, output, sha256, status, created_at')
@@ -33,6 +34,7 @@ export default function ModerationPage() {
   }, [])
 
   const setStatus = async (id: string, status: 'approved' | 'rejected') => {
+    const supabase = createClient()
     await supabase.from('ai_logs').update({ status }).eq('id', id)
     await load()
   }

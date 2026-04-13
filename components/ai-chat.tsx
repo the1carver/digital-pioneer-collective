@@ -9,7 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
 import { Send, Bot, User, AlertCircle, Sparkles, Loader2 } from "lucide-react"
-import { supabase } from "@/lib/supabase-client"
+import { createClient } from "@/lib/supabase/client"
 
 interface AIChatProps {
   className?: string
@@ -48,6 +48,7 @@ export function AIChat({ className }: AIChatProps) {
     setIsLoading(true)
 
     try {
+      const supabase = createClient()
       const { data: { session } } = await supabase.auth.getSession()
       const res = await fetch('/api/chat', {
         method: 'POST',

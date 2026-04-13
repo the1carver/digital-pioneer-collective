@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { supabase } from "@/lib/supabase-client"
+import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { Loader2, Wand2 } from "lucide-react"
 
@@ -29,6 +29,7 @@ export default function NewProposalPage() {
 
   const onSubmit = async (values: FormData) => {
     setSubmitting(true)
+    const supabase = createClient()
     const { data, error } = await supabase
       .from('proposals')
       .insert({ title: values.title, summary: values.summary, content: values.content })
@@ -56,7 +57,8 @@ export default function NewProposalPage() {
       if (json?.draft) {
         setValue('content', json.draft)
         // Best-effort: store hash in ai_logs for transparency (no RLS bypass)
-        await supabase.from('ai_logs').insert({
+        const supabaseLog = createClient()
+        await supabaseLog.from('ai_logs').insert({
           proposal_id: null,
           prompt: `title:${watch('title')}\nsummary:${watch('summary')}`,
           output: json.draft,

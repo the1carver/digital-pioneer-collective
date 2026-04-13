@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { supabase } from "@/lib/supabase-client"
+import { createClient } from "@/lib/supabase/client"
 import { Loader2, Plus } from "lucide-react"
 import { SnapshotProposals } from "@/components/snapshot-proposals"
 
@@ -23,6 +23,7 @@ export default function ProposalsListPage() {
   useEffect(() => {
     const load = async () => {
       setLoading(true)
+      const supabase = createClient()
       const { data } = await supabase
         .from("proposals")
         .select("id, title, summary, status, created_at")

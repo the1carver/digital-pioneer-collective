@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
-import { supabase } from "@/lib/supabase-client"
+import { createClient } from "@/lib/supabase/client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
@@ -28,6 +28,7 @@ export default function ProposalDetailPage() {
     if (!id) {
       return
     }
+    const supabase = createClient()
     await supabase.from('proposals').update({ status: 'under_review' }).eq('id', id)
     await load()
   }
@@ -37,6 +38,7 @@ export default function ProposalDetailPage() {
       return
     }
     setLoading(true)
+    const supabase = createClient()
     const { data } = await supabase
       .from('proposals')
       .select('id, title, summary, content, status, created_at')
@@ -62,6 +64,7 @@ export default function ProposalDetailPage() {
     const cid = json?.cid
     if (cid) {
       const sha256 = CryptoJS.SHA256(content).toString()
+      const supabase = createClient()
       await supabase.from('publications').insert({ proposal_id: proposal.id, ipfs_cid: cid, sha256 })
       await supabase.from('proposals').update({ status: 'published' }).eq('id', proposal.id)
       await load()

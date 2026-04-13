@@ -1,4 +1,4 @@
-import { getSupabaseClient } from './supabase-client'
+import { createClient } from '@/lib/supabase/client'
 import type { User, AuthError } from '@supabase/supabase-js'
 
 export interface AuthState {
@@ -26,15 +26,14 @@ export interface SignInData {
 export const authService = {
   async signUp({ email, password, name, walletAddress, role, experience, interests, portfolio, motivation }: SignUpData) {
     try {
-      const supabase = getSupabaseClient()
-      if (!supabase) {
-        throw new Error('Supabase client not available')
-      }
+      const supabase = createClient()
       
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
+          emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ?? 
+            `${window.location.origin}/auth/callback`,
           data: {
             name,
             wallet_address: walletAddress,
@@ -59,10 +58,7 @@ export const authService = {
 
   async signIn({ email, password }: SignInData) {
     try {
-      const supabase = getSupabaseClient()
-      if (!supabase) {
-        throw new Error('Supabase client not available')
-      }
+      const supabase = createClient()
       
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -81,10 +77,7 @@ export const authService = {
 
   async signOut() {
     try {
-      const supabase = getSupabaseClient()
-      if (!supabase) {
-        throw new Error('Supabase client not available')
-      }
+      const supabase = createClient()
       
       const { error } = await supabase.auth.signOut()
       if (error) {
@@ -98,10 +91,7 @@ export const authService = {
 
   async getCurrentUser() {
     try {
-      const supabase = getSupabaseClient()
-      if (!supabase) {
-        return { user: null, error: null }
-      }
+      const supabase = createClient()
       
       const { data: { user }, error } = await supabase.auth.getUser()
       if (error) {
@@ -114,11 +104,7 @@ export const authService = {
   },
 
   onAuthStateChange(callback: (user: User | null) => void) {
-    const supabase = getSupabaseClient()
-    if (!supabase) {
-      // Return a no-op subscription
-      return { data: { subscription: { unsubscribe: () => {} } } }
-    }
+    const supabase = createClient()
     
     return supabase.auth.onAuthStateChange((_event, session) => {
       callback(session?.user ?? null)

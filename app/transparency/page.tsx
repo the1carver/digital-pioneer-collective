@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { supabase } from "@/lib/supabase-client"
+import { createClient } from "@/lib/supabase/client"
 import Link from "next/link"
 
 interface AILog {
@@ -26,6 +26,7 @@ export default function TransparencyPage() {
 
   useEffect(() => {
     const load = async () => {
+      const supabase = createClient()
       const { data: logs } = await supabase
         .from('ai_logs')
         .select('id, proposal_id, sha256, created_at')

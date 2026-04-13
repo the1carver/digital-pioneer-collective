@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react'
 import { useAccount } from 'wagmi'
-import { supabase } from '@/lib/supabase-client'
+import { createClient } from '@/lib/supabase/client'
 
 export function WalletConnectNote() {
   const { address, isConnected } = useAccount()
@@ -14,6 +14,7 @@ export function WalletConnectNote() {
       }
       // Store wallet address in user metadata (best-effort)
       try {
+        const supabase = createClient()
         const { error } = await supabase.auth.updateUser({
           data: { wallet_address: address }
         })
