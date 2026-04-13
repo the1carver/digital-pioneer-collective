@@ -1,10 +1,24 @@
 "use client"
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { supabase } from '@/lib/supabase-client'
 
 export function WalletConnectNote() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return null
+  }
+
+  return <WalletConnectNoteInner />
+}
+
+function WalletConnectNoteInner() {
   const { address, isConnected } = useAccount()
 
   useEffect(() => {
