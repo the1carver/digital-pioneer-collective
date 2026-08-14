@@ -9,10 +9,12 @@ export function EnvBanner() {
   // NOTE: Next.js only inlines NEXT_PUBLIC_* vars on the client when they are
   // referenced statically. Dynamic access (process.env[key]) is NOT inlined and
   // would always read as undefined in the browser, producing false positives.
+  // WalletConnect is optional — the wallet provider falls back to injected +
+  // Coinbase wallets when NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID is absent — so it
+  // is intentionally not flagged here. Only the required Supabase vars are checked.
   const missing = [
     ['NEXT_PUBLIC_SUPABASE_URL', process.env.NEXT_PUBLIC_SUPABASE_URL],
     ['NEXT_PUBLIC_SUPABASE_ANON_KEY', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY],
-    ['NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID', process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID],
   ]
     .filter(([, value]) => !value)
     .map(([key]) => key)
