@@ -17,6 +17,7 @@ const wagmiConfig = getDefaultConfig({
   appName: 'Digital Pioneers',
   projectId,
   chains,
+  ssr: true,
   transports: {
     [polygon.id]: http(),
     [base.id]: http(),
